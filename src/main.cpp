@@ -36,6 +36,7 @@ int minus(int i, int j) {
     return i - j;
 }
 void plot(){
+
    int length = 1000;
    double frequency = 5.0;
    double amplitude = 1.0;
@@ -68,6 +69,8 @@ void generate_sine_wave(double frequency) {
     }
     title("Sine wave");
     plot(sin.x, sin.y);
+    xlabel("Sample Index");
+    ylabel("Amplitude");
     show();
 }
 
@@ -79,11 +82,15 @@ void generate_cosine_wave(double frequency) {
     }
     title("Cosine wave");
     plot(cos.x, cos.y);
+    xlabel("Sample Index");
+    ylabel("Amplitude");
     show();
 }
 
 void visualize_audio(std::string audio_path) {
     AudioFile<double> audio_file;
+    bool load = audio_file.load(audio_path);
+    if (!load) {
     bool loaded = audio_file.load(audio_path);
     if (!loaded) {
         std::cerr << "Audio is not loaded!" << std::endl;
@@ -91,13 +98,54 @@ void visualize_audio(std::string audio_path) {
     }
 }
 
+void generate_sawtooth_wave(double frequency, int length) {
+    Wave saw; 
+    double amplitude = 1.0;
+    // Generate the sawtooth signal
+    for (int i = 0; i < length; ++i) {
+        double t = static_cast<double>(i) / length;
+        saw.y.push_back(amplitude * (2.0 * (t * frequency - std::floor(0.5 + t * frequency))));
+    }
+    // Create x values
+    std::iota(saw.x.begin(), saw.x.end(), 0);
 
-void generate_sawtooth_wave(double frequency) {
+    // Plot the signal
+    plot(saw.x, saw.y);
+    title("Sawtooth Wave");
+    xlabel("Sample Index");
+    ylabel("Amplitude");
 
+    // Show the plot
+    show();   
 }
 
-void generate_square_wave(double frequency) {
+void generate_square_wave(double frequency, int length, int prog) {
+    Wave square;
+    //int amplitude = 0;
 
+    int period = length / (2 * frequency);
+
+    for (size_t i = 0; i < length; ++i) {
+
+        if ((i / period) % 2 == 0) {
+            square.y.push_back(32767);
+        }
+        else {
+            square.y.push_back(-32768);
+        }
+        //amplitude += frequency;
+    }
+
+    std::iota(square.x.begin(), square.x.end(), 0); 
+
+    // Plot the signal
+    plot(square.x, square.y);
+    title("Square Wave");
+    xlabel("Sample Index");
+    ylabel("Amplitude");
+
+    // Show the plot
+    show();
 
 }
 
@@ -157,6 +205,18 @@ PYBIND11_MODULE(_core, m) {
 
     )pbdoc");
     m.def("visualize_audio", &visualize_audio, R"pbdoc(
+        
+    generate and display cosine wave with given frequency    
+
+    )pbdoc");
+
+    m.def("generate_sawtooth_wave", &generate_sawtooth_wave, R"pbdoc(
+        
+    generate and display cosine wave with given frequency    
+
+    )pbdoc");
+
+    m.def("generate_square_wave", &generate_square_wave, R"pbdoc(
         
     generate and display cosine wave with given frequency    
 
