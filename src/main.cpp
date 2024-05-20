@@ -89,13 +89,23 @@ void generate_cosine_wave(double frequency) {
 
 void visualize_audio(std::string audio_path) {
     AudioFile<double> audio_file;
-    bool load = audio_file.load(audio_path);
-    if (!load) {
+    Wave audio_wave;
     bool loaded = audio_file.load(audio_path);
     if (!loaded) {
         std::cerr << "Audio is not loaded!" << std::endl;
         return;
     }
+    else {
+        int num_of_samples = 500;
+        for (int i = 0; i < num_of_samples; i++) {
+            audio_wave.x.push_back(static_cast<double>(i));
+            audio_wave.y.push_back(static_cast<double>(audio_file.samples[0][i]));
+        }
+    }
+
+    matplot::plot(audio_wave.x, audio_wave.y);
+    matplot::title("Audio signal");
+    matplot::show();
 }
 
 void generate_sawtooth_wave(double frequency, int length) {
