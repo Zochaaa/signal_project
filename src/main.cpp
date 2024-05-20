@@ -1,9 +1,10 @@
 #include <pybind11/pybind11.h>
 #include <matplot/matplot.h>
-#include "AudioFile.h"
+#include <AudioFile.h>
 #include <vector>
 #include <numeric>
 #include <cmath>
+#include <string>
 
 #define STRINGIFY(x) #x
 #define MACRO_STRINGIFY(x) STRINGIFY(x)
@@ -81,6 +82,15 @@ void generate_cosine_wave(double frequency) {
     show();
 }
 
+void visualize_audio(std::string audio_path) {
+    AudioFile<double> audio_file;
+    bool load = audio_file.load(path);
+    if (!load) {
+        std::cerr << "Audio is not loaded!" << std::endl;
+        return;
+    }
+}
+
 void generate_sawtooth_wave(double frequency) {
 
 }
@@ -141,6 +151,11 @@ PYBIND11_MODULE(_core, m) {
     )pbdoc");
 
     m.def("generate_cosine_wave", &generate_cosine_wave, R"pbdoc(
+        
+    generate and display cosine wave with given frequency    
+
+    )pbdoc");
+    m.def("visualize_audio", &visualize_audio, R"pbdoc(
         
     generate and display cosine wave with given frequency    
 
