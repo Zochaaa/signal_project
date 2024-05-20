@@ -25,10 +25,25 @@ if(NOT matplotplusplus_POPULATED)
     add_subdirectory(${matplotplusplus_SOURCE_DIR} ${matplotplusplus_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
-add_subdirectory(AudioFile)
+include(FetchContent)
+FetchContent_Declare(AudioFile
+        GIT_REPOSITORY https://github.com/adamstark/AudioFile.git
+        GIT_TAG origin/master) # or whatever tag you want
+
+FetchContent_MakeAvailable(AudioFile)
+# FetchContent_GetProperties(AudioFile)
+# if(NOT AudioFile_POPULATED)
+#     FetchContent_Populate(AudioFile)
+#     add_subdirectory(${AudioFile_SOURCE_DIR}${AudioFile_BINARY_DIR})
+# endif()
+
+
 # Add a library using FindPython's tooling (pybind11 also provides a helper like
 # this)
 python_add_library(_core MODULE src/main.cpp WITH_SOABI)
+
+target_include_directories(_core PRIVATE ${AudioFile_SOURCE_DIR})
+
 target_link_libraries(_core PUBLIC matplot)
 target_link_libraries(_core PRIVATE pybind11::headers)
 target_link_libraries(_core PRIVATE AudioFile)

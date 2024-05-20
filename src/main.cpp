@@ -1,5 +1,6 @@
 #include <pybind11/pybind11.h>
 #include <matplot/matplot.h>
+#include "AudioFile.h"
 #include <vector>
 #include <numeric>
 
