@@ -84,12 +84,13 @@ void generate_cosine_wave(double frequency) {
 
 void visualize_audio(std::string audio_path) {
     AudioFile<double> audio_file;
-    bool load = audio_file.load(path);
-    if (!load) {
+    bool loaded = audio_file.load(audio_path);
+    if (!loaded) {
         std::cerr << "Audio is not loaded!" << std::endl;
         return;
     }
 }
+
 
 void generate_sawtooth_wave(double frequency) {
 
