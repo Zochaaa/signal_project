@@ -87,6 +87,34 @@ void generate_cosine_wave(double frequency) {
     show();
 }
 
+void threshold_signal(std::string audio_path) {
+    AudioFile<double> audio_file;
+    Wave audio_wave;
+    bool loaded = audio_file.load(audio_path);
+    if (!loaded) {
+        std::cerr << "Audio is not loaded!" << std::endl;
+        return;
+    }
+    else {
+        int num_of_samples = 500;
+        for (int i = 0; i < num_of_samples; i++) {
+            audio_wave.x.push_back(static_cast<double>(i));
+            audio_wave.y.push_back(static_cast<double>(audio_file.samples[0][i]));
+        }
+    }
+    for (int i = 0; i < 500; i++) {
+        if (audio_wave.y.at(i) > 0.1) {
+            audio_wave.y.at(i) = 1;
+        }
+        else {
+            audio_wave.y.at(i) = 0;
+        }
+    }
+    matplot::plot(audio_wave.x, audio_wave.y);
+    matplot::title("threshold signal");
+    matplot::show();
+}
+
 void visualize_audio(std::string audio_path) {
     AudioFile<double> audio_file;
     Wave audio_wave;
@@ -214,6 +242,14 @@ PYBIND11_MODULE(_core, m) {
     generate and display cosine wave with given frequency    
 
     )pbdoc");
+
+
+    m.def("threshold_signal", &threshold_signal, R"pbdoc(
+        
+    generate and display cosine wave with given frequency    
+
+    )pbdoc");
+
     m.def("visualize_audio", &visualize_audio, R"pbdoc(
         
     generate and display cosine wave with given frequency    
