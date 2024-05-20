@@ -16,48 +16,48 @@ struct Wave {
 
 const double PI = 3.14;
 
-//int add(int i, int j) {
-//    std::vector<double> x = {1, 2, 3, 4, 5};
-//    std::vector<double> y = {2, 3, 5, 7, 11};
-//
-//    // Plot data
-//    plot(x, y);
-//    title("Simple Plot");
-//    xlabel("X-axis");
-//    ylabel("Y-axis");
-//
-//    // Show the plot
-//    show();
-//    return i + j;
-//}
+int add(int i, int j) {
+   std::vector<double> x = {1, 2, 3, 4, 5};
+   std::vector<double> y = {2, 3, 5, 7, 11};
+
+   // Plot data
+   plot(x, y);
+   title("Simple Plot");
+   xlabel("X-axis");
+   ylabel("Y-axis");
+
+   // Show the plot
+   show();
+   return i + j;
+}
 
 int minus(int i, int j) {
     return i - j;
 }
-//void plot(){
-//    int length = 1000;
-//    double frequency = 5.0;
-//    double amplitude = 1.0;
-//     // Generate the sawtooth signal
-//    std::vector<double> signal(length);
-//    for (int i = 0; i < length; ++i) {
-//        double t = static_cast<double>(i) / length;
-//        signal[i] = amplitude * (2.0 * (t * frequency - std::floor(0.5 + t * frequency)));
-//    }
-//
-//    // Create x values
-//    std::vector<double> x(signal.size());
-//    std::iota(x.begin(), x.end(), 0);
-//
-//    // Plot the signal
-//    plot(x, signal);
-//    title("Sawtooth Signal");
-//    xlabel("Sample Index");
-//    ylabel("Amplitude");
-//
-//    // Show the plot
-//    show();
-//} 
+void plot(){
+   int length = 1000;
+   double frequency = 5.0;
+   double amplitude = 1.0;
+    // Generate the sawtooth signal
+   std::vector<double> signal(length);
+   for (int i = 0; i < length; ++i) {
+       double t = static_cast<double>(i) / length;
+       signal[i] = amplitude * (2.0 * (t * frequency - std::floor(0.5 + t * frequency)));
+   }
+
+   // Create x values
+   std::vector<double> x(signal.size());
+   std::iota(x.begin(), x.end(), 0);
+
+   // Plot the signal
+   plot(x, signal);
+   title("Sawtooth Signal");
+   xlabel("Sample Index");
+   ylabel("Amplitude");
+
+   // Show the plot
+   show();
+} 
 
 void generate_sine_wave(double frequency) {
     Wave sin;
