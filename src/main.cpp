@@ -72,9 +72,9 @@ void generate_sine_wave(double frequency) {
 
 void generate_cosine_wave(double frequency) {
     Wave cos;
-    for (int i = 0; i < 628; i++){
+    for (int i = 0; i < 2*PI*100; i++){
         cos.x.push_back(static_cast<double>(i) / (100*PI));
-        cos.y.push_back(std::cos(3.14 * frequency * cos.x[i]));
+        cos.y.push_back(std::cos(PI * frequency * cos.x[i]));
     }
     title("Cosine wave");
     plot(cos.x, cos.y);
