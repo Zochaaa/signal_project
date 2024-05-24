@@ -146,8 +146,9 @@ void dft_idft(double frequency, double amplitude, double sample_rate, int num_sa
         begin_wave.x.push_back(t);
         begin_wave.y.push_back(sawtooth_value);
     }
-
-    plot(begin_wave.x, begin_wave.y);
+    auto ax1 = subplot(2, 2, 0);
+    plot(ax1, begin_wave.x, begin_wave.y);\
+    title(ax1, "Sawtooth");
     show();
 
     int N = begin_wave.y.size();
@@ -164,7 +165,9 @@ void dft_idft(double frequency, double amplitude, double sample_rate, int num_sa
         dft_wave.x_complex.push_back(sum);
         dft_wave.y.push_back(std::abs(sum));
     }
-    plot(dft_wave.x, dft_wave.y);
+    auto ax2 = subplot(2, 2, 1);
+    plot(ax2, dft_wave.x, dft_wave.y);
+    title(ax2, "DFT");
     show();
 
     N = dft_wave.x_complex.size();
@@ -179,8 +182,9 @@ void dft_idft(double frequency, double amplitude, double sample_rate, int num_sa
         }
 		idft_wave.y[k] = std::real(sum) / N;
     }
-
-    plot(dft_wave.x, idft_wave.y);
+    auto ax3 = subplot(2, 2, 2);
+    plot(ax3, dft_wave.x, idft_wave.y);
+    title(ax3, "IDFT");
     show();
 }
 
