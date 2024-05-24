@@ -124,17 +124,18 @@ void threshold_signal(std::string audio_path, double threshhold) {
 }
 
 
-void compute_and_plot_dft(double frequency, double amplitude, double sampleRate, int numSamples) {
+void dft_idft(double frequency, double amplitude, double sample_rate, int num_samples) {
     Wave begin_wave;
     Wave dft_wave;
     Wave idft_wave;
 
-    for (int i = 0; i < numSamples; ++i) {
-        double t = i / sampleRate;
+    for (int i = 0; i < num_samples; ++i) {
+        double t = i / sample_rate;
         double sawtooth_value = amplitude * (2 * (t * frequency - floor(t * frequency + 0.5)));
         begin_wave.x.push_back(t);
         begin_wave.y.push_back(sawtooth_value);
     }
+
     plot(begin_wave.x, begin_wave.y);
     show();
 
@@ -147,7 +148,7 @@ void compute_and_plot_dft(double frequency, double amplitude, double sampleRate,
             std::complex<double> w(std::cos(angle), std::sin(angle));
             sum += begin_wave.y[n] * w;
         }
-        double t = k / sampleRate;
+        double t = k / sample_rate;
         dft_wave.x.push_back(t);
         dft_wave.x_complex.push_back(sum);
         dft_wave.y.push_back(std::abs(sum));
