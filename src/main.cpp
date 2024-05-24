@@ -119,21 +119,21 @@ Wave generate_square_wave(double frequency, int length) {
     return square;
 }
 
-void threshold_signal(Wave &begin_wave,double threshhold) {
-    void threshold_signal(Wave & begin_wave, double threshold) {
-        for (int i = 0; i < begin_wave.length; i++) {
-            if (begin_wave.y.at(i) > threshold) {
-                begin_wave.y.at(i) = 1.0; 
-            }
-            else {
+
+void threshold_signal(Wave & begin_wave, double threshold) {
+    for (int i = 0; i < begin_wave.length; i++) {
+         if (begin_wave.y.at(i) > threshold) {
+               begin_wave.y.at(i) = 1.0; 
+            }  
+         else {
                 begin_wave.y.at(i) = 0.0;
             }
-        }
+    }
 
         plot(begin_wave.x, begin_wave.y);
         show();
     }
-}
+
 
 
 void dft_idft(double frequency, double amplitude, double sample_rate, int num_samples) {
