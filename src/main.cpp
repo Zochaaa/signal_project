@@ -15,7 +15,6 @@ using namespace matplot;
 struct Wave {
     std::vector<double> x;
     std::vector<double> y;
-    std::vector<double> y_imag;
     std::vector<std::complex<double>> x_complex;
     double frequency;
     std::string audio_path;
@@ -59,7 +58,7 @@ Wave visualize_audio(std::string audio_path) {
     bool loaded = audio_file.load(audio_path);
     if (!loaded) {
         std::cerr << "Audio is not loaded!" << std::endl;
-        visualize_audio(std::string audio_path);
+        visualize_audio(audio_path);
     }
     else {
         audio_wave.audio_path = audio_path;
@@ -119,7 +118,7 @@ Wave generate_square_wave(double frequency, int length) {
     return square;
 }
 
-void threshold_signal(Wave begin_wave,int threshhold) {
+void threshold_signal(Wave &begin_wave,double threshhold) {
     Wave end_wave;
 	
 	for (int i = 0; i < begin_wave.length; i++) {
