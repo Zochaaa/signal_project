@@ -16,7 +16,6 @@ struct Wave {
     std::vector<double> x;
     std::vector<double> y;
     std::vector<std::complex<double>> x_complex;
-    double frequency;
     std::string audio_path;
     int length;
 };
@@ -28,7 +27,6 @@ typedef std::complex<double> Complex;
 Wave generate_sine_wave(double frequency) {
     Wave sin;
     sin.length = 2 * PI * 100;
-    sin.frequency = frequency;
     for (int i = 0; i < 2*PI*100; i++){
         sin.x.push_back(static_cast<double>(i) / (100*PI));
         sin.y.push_back(std::sin(PI * frequency * sin.x[i]));
@@ -41,7 +39,6 @@ Wave generate_sine_wave(double frequency) {
 Wave generate_cosine_wave(double frequency) {
     Wave cos;
     cos.length = 2 * PI * 100;
-    cos.frequency = frequency;
     for (int i = 0; i < 2*PI*100; i++){
         cos.x.push_back(static_cast<double>(i) / (100*PI));
         cos.y.push_back(std::cos(PI * frequency * cos.x[i]));
@@ -54,10 +51,11 @@ Wave generate_cosine_wave(double frequency) {
 Wave visualize_audio(std::string audio_path) {
         AudioFile<double> audio_file;
         Wave audio_wave;
+        int sum_i = 0;
         bool loaded = audio_file.load(audio_path);
         if (!loaded) {
             std::cerr << "Audio is not loaded!" << std::endl;
-            return;
+            visualize_audio(audio_path);
         }
         else {
             double time = audio_file.getLengthInSeconds();
@@ -65,7 +63,9 @@ Wave visualize_audio(std::string audio_path) {
             for (int i = 0; i < time * sample_rate; i++) {
                 audio_wave.x.push_back(static_cast<double>(i));
                 audio_wave.y.push_back(static_cast<double>(audio_file.samples[0][i]));
+                sum_i += i;
             }
+            audio_wave.length = sum_i;
         }
         plot(audio_wave.x, audio_wave.y);
         show();
@@ -75,7 +75,6 @@ Wave visualize_audio(std::string audio_path) {
 Wave generate_sawtooth_wave(double frequency, int length) {
     Wave saw; 
     saw.length = length;
-    saw.frequency = frequency;
     double amplitude = 1.0;
     for (int i = 0; i < length; ++i) {
         double t = static_cast<double>(i) / length;
@@ -91,7 +90,6 @@ Wave generate_sawtooth_wave(double frequency, int length) {
 Wave generate_square_wave(double frequency, int length) {
     Wave square;
     square.length = length;
-    square.frequency = frequency;
     int period = length / (2 * frequency);
 
     for (size_t i = 0; i < length; ++i) {
