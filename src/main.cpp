@@ -5,6 +5,8 @@
 #include <numeric>
 #include <cmath>
 #include <string>
+#include "pybind11/complex.h"
+#include <complex>
 
 #define STRINGIFY(x) #x
 #define MACRO_STRINGIFY(x) STRINGIFY(x)
@@ -87,33 +89,7 @@ void generate_cosine_wave(double frequency) {
     show();
 }
 
-void threshold_signal(std::string audio_path) {
-    AudioFile<double> audio_file;
-    Wave audio_wave;
-    bool loaded = audio_file.load(audio_path);
-    if (!loaded) {
-        std::cerr << "Audio is not loaded!" << std::endl;
-        return;
-    }
-    else {
-        int num_of_samples = 500;
-        for (int i = 0; i < num_of_samples; i++) {
-            audio_wave.x.push_back(static_cast<double>(i));
-            audio_wave.y.push_back(static_cast<double>(audio_file.samples[0][i]));
-        }
-    }
-    for (int i = 0; i < 500; i++) {
-        if (audio_wave.y.at(i) > 0.1) {
-            audio_wave.y.at(i) = 1;
-        }
-        else {
-            audio_wave.y.at(i) = 0;
-        }
-    }
-    matplot::plot(audio_wave.x, audio_wave.y);
-    matplot::title("threshold signal");
-    matplot::show();
-}
+
 
 void visualize_audio(std::string audio_path) {
     AudioFile<double> audio_file;
@@ -185,6 +161,21 @@ void generate_square_wave(double frequency, int length, int prog) {
     // Show the plot
     show();
 
+}
+
+void threshold_signal(Wave wave, double threshold_frequency) {
+    int num_of_samples = 500;
+    for (int i = 0; i < num_of_samples; i++) {
+        if (wave.y.at(i) > threshold_frequency) {
+            wave.y.at(i) = 1;
+        }
+        else {
+            audio_wave.y.at(i) = 0;
+        }
+    }
+    matplot::plot(wave.x, wave.y);
+    matplot::title("threshold signal");
+    matplot::show();
 }
 
 namespace py = pybind11;
