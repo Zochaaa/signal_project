@@ -52,7 +52,6 @@ Wave generate_cosine_wave(double frequency) {
 }
 
 Wave visualize_audio(std::string audio_path) {
-    void visualize_audio(std::string audio_path) {
         AudioFile<double> audio_file;
         Wave audio_wave;
         bool loaded = audio_file.load(audio_path);
@@ -70,7 +69,6 @@ Wave visualize_audio(std::string audio_path) {
         }
         plot(audio_wave.x, audio_wave.y);
         show();
-    }
     return audio_wave;
 }
 
