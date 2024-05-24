@@ -119,7 +119,7 @@ Wave generate_square_wave(double frequency, int length) {
     return square;
 }
 
-void threshold_signal(Wave begin_wave, threshhold) {
+void threshold_signal(Wave begin_wave,int threshhold) {
     Wave end_wave;
 	
 	for (int i = 0; i < begin_wave.length; i++) {
@@ -219,29 +219,29 @@ PYBIND11_MODULE(_core, m) {
 
     m.def("threshold_signal", &threshold_signal, R"pbdoc(
         
-    generate and display cosine wave with given frequency    
+      
 
     )pbdoc");
 
     m.def("visualize_audio", &visualize_audio, R"pbdoc(
         
-    generate and display cosine wave with given frequency    
+    generate  wave with audio  
 
     )pbdoc");
 
     m.def("generate_sawtooth_wave", &generate_sawtooth_wave, R"pbdoc(
         
-    generate and display cosine wave with given frequency    
+    generate and display sawtooth wave with given frequency    
 
     )pbdoc");
 
     m.def("generate_square_wave", &generate_square_wave, R"pbdoc(
         
-    generate and display cosine wave with given frequency    
+    generate and display square wave with given frequency    
 
     )pbdoc");
 
-    m.def("compute_and_plot_dft", &compute_and_plot_dft, R"pbdoc(
+    m.def("dft_idft", &dft_idft, R"pbdoc(
         
     generate and display cosine wave with given frequency    
 
