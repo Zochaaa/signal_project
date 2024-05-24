@@ -119,7 +119,7 @@ Wave generate_square_wave(double frequency, int length) {
     return square;
 }
 
-void threshold_signal(Wave begin_wave) {
+void threshold_signal(Wave begin_wave, threshhold) {
     Wave end_wave;
 	
 	for (int i = 0; i < begin_wave.length; i++) {
