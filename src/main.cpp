@@ -124,10 +124,10 @@ void threshold_signal(Wave begin_wave,int threshhold) {
 	
 	for (int i = 0; i < begin_wave.length; i++) {
 		if (end_wave.y.at(i) > threshhold) {
-			end_wave.y.at(i) = 1;
+			end_wave.y.at(i) = 1.0;
 		}
 		else {
-			end_wave.y.at(i) = 0;
+			end_wave.y.at(i) = 0.0;
 		}
 	}
 	plot(end_wave.x, end_wave.y);
@@ -203,6 +203,16 @@ PYBIND11_MODULE(_core, m) {
 
          
     )pbdoc";
+
+    py::class_<Wave>(m, "Wave")
+        .def(py::init<>())
+        .def_readwrite("x", &Wave::x)
+        .def_readwrite("y", &Wave::y)
+        .def_readwrite("y_imag", &Wave::y_imag)
+        .def_readwrite("x_complex", &Wave::x_complex)
+        .def_readwrite("frequency", &Wave::frequency)
+        .def_readwrite("audio_path", &Wave::audio_path)
+        .def_readwrite("length", &Wave::length);
 
     m.def("generate_sine_wave", &generate_sine_wave, R"pbdoc(
         
