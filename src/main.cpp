@@ -207,7 +207,6 @@ PYBIND11_MODULE(_core, m) {
         .def(py::init<>())
         .def_readwrite("x", &Wave::x)
         .def_readwrite("y", &Wave::y)
-        .def_readwrite("y_imag", &Wave::y_imag)
         .def_readwrite("x_complex", &Wave::x_complex)
         .def_readwrite("frequency", &Wave::frequency)
         .def_readwrite("audio_path", &Wave::audio_path)
