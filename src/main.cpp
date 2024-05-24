@@ -52,29 +52,25 @@ Wave generate_cosine_wave(double frequency) {
 }
 
 Wave visualize_audio(std::string audio_path) {
-    AudioFile<double> audio_file;
-    Wave audio_wave;
-    
-    bool loaded = audio_file.load(audio_path);
-    if (!loaded) {
-        std::cerr << "Audio is not loaded!" << std::endl;
-        visualize_audio(audio_path);
-    }
-    else {
-        audio_wave.audio_path = audio_path;
-        double time = audio_file.getLengthInSeconds();
-        int sample_rate = audio_file.getSampleRate();
-        audio_wave.length = time * sample_rate;
-        for (int i = 0; i < time*sample_rate; i++) {
-            audio_wave.y.push_back(static_cast<double>(audio_file.samples[0][i]));
-            audio_wave.x[i] = static_cast<double>(i) / sample_rate;
+    void visualize_audio(std::string audio_path) {
+        AudioFile<double> audio_file;
+        Wave audio_wave;
+        bool loaded = audio_file.load(audio_path);
+        if (!loaded) {
+            std::cerr << "Audio is not loaded!" << std::endl;
+            return;
         }
-        for (int i = 0; i < audio_wave.length; i++) {
-            audio_wave.x[i] /= sample_rate;
+        else {
+            double time = audio_file.getLengthInSeconds();
+            int sample_rate = audio_file.getSampleRate();
+            for (int i = 0; i < time * sample_rate; i++) {
+                audio_wave.x.push_back(static_cast<double>(i));
+                audio_wave.y.push_back(static_cast<double>(audio_file.samples[0][i]));
+            }
         }
+        plot(audio_wave.x, audio_wave.y);
+        show();
     }
-    plot(audio_wave.x, audio_wave.y);
-    show();
     return audio_wave;
 }
 
@@ -88,7 +84,6 @@ Wave generate_sawtooth_wave(double frequency, int length) {
         saw.y.push_back(amplitude * (2.0 * (t * frequency - std::floor(0.5 + t * frequency))));
         saw.x.push_back(t);
     }
-    //std::iota(saw.x.begin(), saw.x.end(a), 0);
 
     plot(saw.x, saw.y);
     show();   
@@ -112,7 +107,6 @@ Wave generate_square_wave(double frequency, int length) {
         }
         square.x.push_back(i);
     }
-    //std::iota(square.x.begin(), square.x.end(), 0); 
 
     plot(square.x, square.y);
     show();
@@ -129,7 +123,6 @@ void threshold_signal(Wave & begin_wave, double threshold) {
                 begin_wave.y.at(i) = 0.0;
             }
     }
-
         plot(begin_wave.x, begin_wave.y);
         show();
     }
@@ -149,7 +142,6 @@ void dft_idft(double frequency, double amplitude, double sample_rate, int num_sa
     }
     auto ax1 = subplot(2, 2, 0);
     plot(ax1, begin_wave.x, begin_wave.y);\
-    title(ax1, "Sawtooth");
     show();
 
     int N = begin_wave.y.size();
@@ -168,7 +160,6 @@ void dft_idft(double frequency, double amplitude, double sample_rate, int num_sa
     }
     auto ax2 = subplot(2, 2, 1);
     plot(ax2, dft_wave.x, dft_wave.y);
-    title(ax2, "DFT");
     show();
 
     N = dft_wave.x_complex.size();
@@ -185,7 +176,6 @@ void dft_idft(double frequency, double amplitude, double sample_rate, int num_sa
     }
     auto ax3 = subplot(2, 2, 2);
     plot(ax3, dft_wave.x, idft_wave.y);
-    title(ax3, "IDFT");
     show();
 }
 
