@@ -59,7 +59,7 @@ Wave visualize_audio(std::string audio_path) {
     bool loaded = audio_file.load(audio_path);
     if (!loaded) {
         std::cerr << "Audio is not loaded!" << std::endl;
-        return;
+        visualize_audio(std::string audio_path);
     }
     else {
         audio_wave.audio_path = audio_path;
