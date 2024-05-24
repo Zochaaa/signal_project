@@ -52,8 +52,9 @@ void visualize_audio(std::string audio_path) {
         return;
     }
     else {
-        int num_of_samples = 500;
-        for (int i = 0; i < num_of_samples; i++) {
+        double time = audio_wave.getLengthInSeconds();
+        int sample_rate = audio_wave.getSampleRate();
+        for (int i = 0; i < time*sample_rate; i++) {
             audio_wave.x.push_back(static_cast<double>(i));
             audio_wave.y.push_back(static_cast<double>(audio_file.samples[0][i]));
         }
@@ -69,19 +70,15 @@ void generate_sawtooth_wave(double frequency, int length) {
     for (int i = 0; i < length; ++i) {
         double t = static_cast<double>(i) / length;
         saw.y.push_back(amplitude * (2.0 * (t * frequency - std::floor(0.5 + t * frequency))));
+        saw.x.push_back(t);
     }
-
-    std::iota(saw.x.begin(), saw.x.end(), 0);
+    //std::iota(saw.x.begin(), saw.x.end(a), 0);
 
     plot(saw.x, saw.y);
-    title("Sawtooth Wave");
-    xlabel("Sample Index");
-    ylabel("Amplitude");
-
     show();   
 }
 
-void generate_square_wave(double frequency, int length, int prog) {
+void generate_square_wave(double frequency, int length) {
     Wave square;
 
     int period = length / (2 * frequency);
@@ -90,21 +87,20 @@ void generate_square_wave(double frequency, int length, int prog) {
 
         if ((i / period) % 2 == 0) {
             square.y.push_back(BUFF);
+           
         }
         else {
             square.y.push_back(-BUFF);
         }
+        square.x.push_back(period*i);
     }
-    std::iota(square.x.begin(), square.x.end(), 0); 
+    //std::iota(square.x.begin(), square.x.end(), 0); 
 
     plot(square.x, square.y);
-    title("Square Wave");
-    xlabel("Sample Index");
-    ylabel("Amplitude");
     show();
 }
 
-void threshold_signal(std::string audio_path,double threshhold) {
+void threshold_signal(std::string audio_path, double threshhold) {
 	AudioFile<double> audio_file;
 	Wave audio_wave;
 	bool loaded = audio_file.load(audio_path);
@@ -124,7 +120,6 @@ void threshold_signal(std::string audio_path,double threshhold) {
 		}
 	}
 	plot(audio_wave.x, audio_wave.y);
-	title("threshold signal");
 	show();
 }
 
@@ -141,6 +136,7 @@ void compute_and_plot_dft(double frequency, double amplitude, double sampleRate,
         begin_wave.y.push_back(sawtooth_value);
     }
     plot(begin_wave.x, begin_wave.y);
+    draw();
     show();
 
     int N = begin_wave.y.size();
@@ -158,6 +154,7 @@ void compute_and_plot_dft(double frequency, double amplitude, double sampleRate,
         dft_wave.y.push_back(std::abs(sum));
     }
     plot(dft_wave.x, dft_wave.y);
+    draw();
     show();
 
     N = dft_wave.x_complex.size();
@@ -174,6 +171,7 @@ void compute_and_plot_dft(double frequency, double amplitude, double sampleRate,
     }
 
     plot(dft_wave.x, idft_wave.y);
+    draw();
     show();
 }
 
