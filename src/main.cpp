@@ -67,9 +67,10 @@ Wave visualize_audio(std::string audio_path) {
         audio_wave.length = time * sample_rate;
         for (int i = 0; i < time*sample_rate; i++) {
             audio_wave.y.push_back(static_cast<double>(audio_file.samples[0][i]));
+            audio_wave.x[i] = static_cast<double>(i) / sample_rate;
         }
-        for (int i = 0; i <= time; i++) {
-            audio_wave.x.push_back(i);
+        for (int i = 0; i < audio_wave.length; i++) {
+            audio_wave.x[i] /= sample_rate;
         }
     }
     plot(audio_wave.x, audio_wave.y);
@@ -119,18 +120,19 @@ Wave generate_square_wave(double frequency, int length) {
 }
 
 void threshold_signal(Wave &begin_wave,double threshhold) {
-    Wave end_wave;
-	
-	for (int i = 0; i < begin_wave.length; i++) {
-		if (end_wave.y.at(i) > threshhold) {
-			end_wave.y.at(i) = 1.0;
-		}
-		else {
-			end_wave.y.at(i) = 0.0;
-		}
-	}
-	plot(end_wave.x, end_wave.y);
-	show();
+    void threshold_signal(Wave & begin_wave, double threshold) {
+        for (int i = 0; i < begin_wave.length; i++) {
+            if (begin_wave.y.at(i) > threshold) {
+                begin_wave.y.at(i) = 1.0; 
+            }
+            else {
+                begin_wave.y.at(i) = 0.0;
+            }
+        }
+
+        plot(begin_wave.x, begin_wave.y);
+        show();
+    }
 }
 
 
