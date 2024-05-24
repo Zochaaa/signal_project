@@ -17,56 +17,72 @@ struct Wave {
     std::vector<double> y;
     std::vector<double> y_imag;
     std::vector<std::complex<double>> x_complex;
+    double frequency;
+    std::string audio_path;
+    int length;
 };
 
 const double PI = 3.14;
 const int BUFF = 32767;
 typedef std::complex<double> Complex;
 
-void generate_sine_wave(double frequency) {
+Wave generate_sine_wave(double frequency) {
     Wave sin;
+    sin.length = 2 * PI * 100;
+    sin.frequency = frequency;
     for (int i = 0; i < 2*PI*100; i++){
         sin.x.push_back(static_cast<double>(i) / (100*PI));
         sin.y.push_back(std::sin(PI * frequency * sin.x[i]));
     }
     plot(sin.x, sin.y);
     show();
+    return sin;
 }
 
-void generate_cosine_wave(double frequency) {
+Wave generate_cosine_wave(double frequency) {
     Wave cos;
+    cos.length = 2 * PI * 100;
+    cos.frequency = frequency;
     for (int i = 0; i < 2*PI*100; i++){
         cos.x.push_back(static_cast<double>(i) / (100*PI));
         cos.y.push_back(std::cos(PI * frequency * cos.x[i]));
     }
     plot(cos.x, cos.y);
     show();
+    return cos;
 }
 
-void visualize_audio(std::string audio_path) {
+Wave visualize_audio(std::string audio_path) {
     AudioFile<double> audio_file;
     Wave audio_wave;
+    
     bool loaded = audio_file.load(audio_path);
     if (!loaded) {
         std::cerr << "Audio is not loaded!" << std::endl;
         return;
     }
     else {
+        audio_wave.audio_path = audio_path;
         double time = audio_file.getLengthInSeconds();
         int sample_rate = audio_file.getSampleRate();
+        audio_wave.length = time * sample_rate;
         for (int i = 0; i < time*sample_rate; i++) {
-            audio_wave.x.push_back(static_cast<double>(i));
             audio_wave.y.push_back(static_cast<double>(audio_file.samples[0][i]));
+        }
+        for (int i = 0; i <= time; i++) {
+            audio_wave.x.push_back(i);
         }
     }
     plot(audio_wave.x, audio_wave.y);
     show();
+    return audio_wave;
 }
 
-void generate_sawtooth_wave(double frequency, int length) {
+Wave generate_sawtooth_wave(double frequency, int length) {
     Wave saw; 
+    saw.length = length;
+    saw.frequency = frequency;
     double amplitude = 1.0;
-
     for (int i = 0; i < length; ++i) {
         double t = static_cast<double>(i) / length;
         saw.y.push_back(amplitude * (2.0 * (t * frequency - std::floor(0.5 + t * frequency))));
@@ -76,11 +92,13 @@ void generate_sawtooth_wave(double frequency, int length) {
 
     plot(saw.x, saw.y);
     show();   
+    return saw;
 }
 
-void generate_square_wave(double frequency, int length) {
+Wave generate_square_wave(double frequency, int length) {
     Wave square;
-
+    square.length = length;
+    square.frequency = frequency;
     int period = length / (2 * frequency);
 
     for (size_t i = 0; i < length; ++i) {
@@ -92,45 +110,38 @@ void generate_square_wave(double frequency, int length) {
         else {
             square.y.push_back(-BUFF);
         }
-        square.x.push_back(period*i);
+        square.x.push_back(i);
     }
     //std::iota(square.x.begin(), square.x.end(), 0); 
 
     plot(square.x, square.y);
     show();
+    return square;
 }
 
-void threshold_signal(std::string audio_path, double threshhold) {
-	AudioFile<double> audio_file;
-	Wave audio_wave;
-	bool loaded = audio_file.load(audio_path);
-
-	int num_of_samples = 500;
-		for (int i = 0; i < num_of_samples; i++) {
-			audio_wave.x.push_back(static_cast<double>(i));
-			audio_wave.y.push_back(static_cast<double>(audio_file.samples[0][i]));
-		}
+void threshold_signal(Wave begin_wave) {
+    Wave end_wave;
 	
-	for (int i = 0; i < 500; i++) {
-		if (audio_wave.y.at(i) > threshhold) {
-			audio_wave.y.at(i) = 1;
+	for (int i = 0; i < begin_wave.length; i++) {
+		if (end_wave.y.at(i) > threshhold) {
+			end_wave.y.at(i) = 1;
 		}
 		else {
-			audio_wave.y.at(i) = 0;
+			end_wave.y.at(i) = 0;
 		}
 	}
-	plot(audio_wave.x, audio_wave.y);
+	plot(end_wave.x, end_wave.y);
 	show();
 }
 
 
-void compute_and_plot_dft(double frequency, double amplitude, double sampleRate, int numSamples) {
+void dft_idft(double frequency, double amplitude, double sample_rate, int num_samples) {
     Wave begin_wave;
     Wave dft_wave;
     Wave idft_wave;
 
-    for (int i = 0; i < numSamples; ++i) {
-        double t = i / sampleRate;
+    for (int i = 0; i < num_samples; ++i) {
+        double t = i / sample_rate;
         double sawtooth_value = amplitude * (2 * (t * frequency - floor(t * frequency + 0.5)));
         begin_wave.x.push_back(t);
         begin_wave.y.push_back(sawtooth_value);
@@ -149,7 +160,7 @@ void compute_and_plot_dft(double frequency, double amplitude, double sampleRate,
             std::complex<double> w(std::cos(angle), std::sin(angle));
             sum += begin_wave.y[n] * w;
         }
-        double t = k / sampleRate;
+        double t = k / sample_rate;
         dft_wave.x.push_back(t);
         dft_wave.x_complex.push_back(sum);
         dft_wave.y.push_back(std::abs(sum));
