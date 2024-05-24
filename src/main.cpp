@@ -52,8 +52,8 @@ void visualize_audio(std::string audio_path) {
         return;
     }
     else {
-        double time = audio_wave.getLengthInSeconds();
-        int sample_rate = audio_wave.getSampleRate();
+        double time = audio_file.getLengthInSeconds();
+        int sample_rate = audio_file.getSampleRate();
         for (int i = 0; i < time*sample_rate; i++) {
             audio_wave.x.push_back(static_cast<double>(i));
             audio_wave.y.push_back(static_cast<double>(audio_file.samples[0][i]));
@@ -136,7 +136,6 @@ void compute_and_plot_dft(double frequency, double amplitude, double sampleRate,
         begin_wave.y.push_back(sawtooth_value);
     }
     plot(begin_wave.x, begin_wave.y);
-    draw();
     show();
 
     int N = begin_wave.y.size();
@@ -154,7 +153,6 @@ void compute_and_plot_dft(double frequency, double amplitude, double sampleRate,
         dft_wave.y.push_back(std::abs(sum));
     }
     plot(dft_wave.x, dft_wave.y);
-    draw();
     show();
 
     N = dft_wave.x_complex.size();
@@ -171,7 +169,6 @@ void compute_and_plot_dft(double frequency, double amplitude, double sampleRate,
     }
 
     plot(dft_wave.x, idft_wave.y);
-    draw();
     show();
 }
 
